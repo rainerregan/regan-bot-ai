@@ -55,7 +55,7 @@ public class ReganbotApplication extends SpringBootServletInitializer {
 			System.out.println(replyResponse);
 
 		}catch (Exception e){
-			System.out.println("Ada error saat ingin membalas chat");
+			System.out.println(e);
 		}
 
 		balasChatDenganJawaban(replyToken, replyMessage);
