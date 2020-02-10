@@ -39,29 +39,32 @@ public class ReganbotApplication extends SpringBootServletInitializer {
 	@EventMapping
 	public void handleTextEvent(MessageEvent<TextMessageContent> messageEvent){
 		String pesan = messageEvent.getMessage().getText().toLowerCase();
+		String[] pesanSplit = pesan.split("");
 
-		System.out.println(pesan);
+		//System.out.println(pesan);
 
 		String uid = messageEvent.getSource().getUserId();
 
 		String replyToken = messageEvent.getReplyToken();
 		String replyMessage = "Sorry, I don't understand you.";
 
-		try {
+		if(pesanSplit[0].equals("!")) {
 
-			String baseUrl = "http://api.brainshop.ai/get?bid=10463&key=HadqGciRQOLAW0XQ&uid="+ uid + "&msg=" + URLEncoder.encode(pesan, "UTF-8");
-			JSONObject replyResponse;
-			replyResponse = jsonReader.readJsonFromUrl(baseUrl);
+			try {
 
-			replyMessage = replyResponse.getString("cnt");
-			System.out.println(replyResponse);
+				String baseUrl = "http://api.brainshop.ai/get?bid=10463&key=HadqGciRQOLAW0XQ&uid=" + uid + "&msg=" + URLEncoder.encode(pesan, "UTF-8");
+				JSONObject replyResponse;
+				replyResponse = jsonReader.readJsonFromUrl(baseUrl);
 
-		}catch (Exception e){
-			System.out.println(e);
+				replyMessage = replyResponse.getString("cnt");
+				System.out.println(replyResponse);
+
+			} catch (Exception e) {
+				System.out.println(e);
+			}
+
+			balasChatDenganJawaban(replyToken, replyMessage);
 		}
-
-		balasChatDenganJawaban(replyToken, replyMessage);
-
 		/*
 		String[] pesanSplit = pesan.split(" ");
 		if(pesanSplit[0].equals("apakah")){
