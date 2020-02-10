@@ -39,6 +39,8 @@ public class ReganbotApplication extends SpringBootServletInitializer {
 	public void handleTextEvent(MessageEvent<TextMessageContent> messageEvent){
 		String pesan = messageEvent.getMessage().getText().toLowerCase();
 
+		System.out.println(pesan);
+
 		String uid = messageEvent.getSource().getUserId();
 		String baseUrl = "http://api.brainshop.ai/get?bid=10463&key=HadqGciRQOLAW0XQ&uid="+ uid + "&msg=" + pesan;
 
@@ -50,6 +52,7 @@ public class ReganbotApplication extends SpringBootServletInitializer {
 			replyResponse = jsonReader.readJsonFromUrl(baseUrl);
 
 			replyMessage = replyResponse.getString("cnt");
+			System.out.println(replyResponse);
 
 		}catch (Exception e){
 			System.out.println("Ada error saat ingin membalas chat");
