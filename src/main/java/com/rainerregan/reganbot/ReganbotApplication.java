@@ -14,6 +14,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
+import java.net.URLEncoder;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
@@ -42,12 +43,13 @@ public class ReganbotApplication extends SpringBootServletInitializer {
 		System.out.println(pesan);
 
 		String uid = messageEvent.getSource().getUserId();
-		String baseUrl = "http://api.brainshop.ai/get?bid=10463&key=HadqGciRQOLAW0XQ&uid="+ uid + "&msg=" + pesan;
 
 		String replyToken = messageEvent.getReplyToken();
 		String replyMessage = "ERROR";
 
 		try {
+
+			String baseUrl = "http://api.brainshop.ai/get?bid=10463&key=HadqGciRQOLAW0XQ&uid="+ uid + "&msg=" + URLEncoder.encode(pesan, "UTF-8");
 			JSONObject replyResponse;
 			replyResponse = jsonReader.readJsonFromUrl(baseUrl);
 
