@@ -35,11 +35,15 @@ public class ReganbotApplication extends SpringBootServletInitializer {
 	@EventMapping
 	public void handleTextEvent(MessageEvent<TextMessageContent> messageEvent){
 		String pesan = messageEvent.getMessage().getText().toLowerCase();
+
+		String uid = messageEvent.getSource().getUserId();
+		String baseUrl = "http://api.brainshop.ai/get?bid=10463&key=HadqGciRQOLAW0XQ&uid="+"&msg=";
+
 		String[] pesanSplit = pesan.split(" ");
 		if(pesanSplit[0].equals("apakah")){
 			String jawaban = getRandomJawaban();
 			String replyToken = messageEvent.getReplyToken();
-			balasChatDenganRandomJawaban(replyToken, jawaban);
+			balasChatDenganRandomJawaban(replyToken, jawaban + uid);
 		}
 	}
 
