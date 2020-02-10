@@ -7,6 +7,7 @@ import com.linecorp.bot.model.event.message.TextMessageContent;
 import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.spring.boot.annotation.EventMapping;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,6 +20,8 @@ import java.util.concurrent.ExecutionException;
 @LineMessageHandler
 @SpringBootApplication
 public class ReganbotApplication extends SpringBootServletInitializer {
+
+	JsonReader jsonReader;
 
 	@Autowired
 	private LineMessagingClient lineMessagingClient;
@@ -37,16 +40,34 @@ public class ReganbotApplication extends SpringBootServletInitializer {
 		String pesan = messageEvent.getMessage().getText().toLowerCase();
 
 		String uid = messageEvent.getSource().getUserId();
-		String baseUrl = "http://api.brainshop.ai/get?bid=10463&key=HadqGciRQOLAW0XQ&uid="+"&msg=";
+		String baseUrl = "http://api.brainshop.ai/get?bid=10463&key=HadqGciRQOLAW0XQ&uid="+ uid + "&msg=" + pesan;
 
+		String replyToken = messageEvent.getReplyToken();
+		String replyMessage = "ERROR";
+
+		try {
+			JSONObject replyResponse;
+			replyResponse = jsonReader.readJsonFromUrl(baseUrl);
+
+			replyMessage = replyResponse.getString("cnt");
+
+		}catch (Exception e){
+			System.out.println("Ada error saat ingin membalas chat");
+		}
+
+		balasChatDenganJawaban(replyToken, replyMessage);
+
+		/*
 		String[] pesanSplit = pesan.split(" ");
 		if(pesanSplit[0].equals("apakah")){
 			String jawaban = getRandomJawaban();
 			String replyToken = messageEvent.getReplyToken();
 			balasChatDenganRandomJawaban(replyToken, jawaban + uid);
 		}
+		 */
 	}
 
+	/*
 	private String getRandomJawaban(){
 		String jawaban = "";
 		int random = new Random().nextInt();
@@ -57,8 +78,8 @@ public class ReganbotApplication extends SpringBootServletInitializer {
 		}
 		return jawaban;
 	}
-
-	private void balasChatDenganRandomJawaban(String replyToken, String jawaban){
+	 */
+	private void balasChatDenganJawaban(String replyToken, String jawaban){
 		TextMessage jawabanDalamBentukTextMessage = new TextMessage(jawaban);
 		try {
 			lineMessagingClient
