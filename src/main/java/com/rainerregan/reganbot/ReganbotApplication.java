@@ -45,7 +45,7 @@ public class ReganbotApplication extends SpringBootServletInitializer {
 		String uid = messageEvent.getSource().getUserId();
 
 		String replyToken = messageEvent.getReplyToken();
-		String replyMessage = "ERROR";
+		String replyMessage = "Sorry, I don't understand you.";
 
 		try {
 
