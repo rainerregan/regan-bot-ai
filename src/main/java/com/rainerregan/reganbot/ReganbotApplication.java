@@ -64,6 +64,42 @@ public class ReganbotApplication extends SpringBootServletInitializer {
 			}
 
 			balasChatDenganJawaban(replyToken, replyMessage);
+		}else if(pesanSplit[0].equals("-")){
+			try {
+				String idToEn = "id|en";
+				String enToId = "en|id";
+
+				String translationUrlIdEn = "https://api.mymemory.translated.net/get?q="+ URLEncoder.encode(pesan, "UTF-8") +"&langpair=";
+
+				//MENTRANSLATE DARI ID KE EN
+				JSONObject translatedIdToEnText;
+				translatedIdToEnText = jsonReader.readJsonFromUrl(translationUrlIdEn+idToEn).getJSONObject("responseData");
+
+				String pesanDalamEn = translatedIdToEnText.getString("translatedText");
+
+				//test
+				System.out.println(pesanDalamEn);
+
+				String baseUrl = "http://api.brainshop.ai/get?bid=10463&key=HadqGciRQOLAW0XQ&uid=" + uid + "&msg=" + URLEncoder.encode(pesanDalamEn, "UTF-8");
+
+				JSONObject replyResponse;
+				replyResponse = jsonReader.readJsonFromUrl(baseUrl);
+
+				//replyMessage = replyResponse.getString("cnt");
+				System.out.println(replyResponse);
+
+				String translationUrlEnId = "https://api.mymemory.translated.net/get?q="+ URLEncoder.encode(replyResponse.getString("cnt"), "UTF-8") +"&langpair=";
+
+				//MENTRANSLATE KE ID KEMBALI
+				JSONObject translatedEnToIdText;
+				translatedEnToIdText = jsonReader.readJsonFromUrl(translationUrlEnId+enToId).getJSONObject("responseData");
+
+				replyMessage = translatedEnToIdText.getString("translatedText");
+
+			} catch (Exception e) {
+				System.out.println(e);
+			}
+			balasChatDenganJawaban(replyToken, replyMessage);
 		}
 		/*
 		String[] pesanSplit = pesan.split(" ");
