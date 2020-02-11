@@ -48,7 +48,13 @@ public class ReganbotApplication extends SpringBootServletInitializer {
 		String replyToken = messageEvent.getReplyToken();
 		String replyMessage = "Sorry, I don't understand you.";
 
-		if(pesanSplit[0].equals("!")) {
+		if (pesan == "!commands"){
+			String reply = "COMMANDS:\n" +
+					"1. use '!' for english\n" +
+					"2. use '-' for indonesian\n";
+
+			balasChatDenganJawaban(replyToken, reply);
+		}else if(pesanSplit[0].equals("!")) {
 
 			try {
 
