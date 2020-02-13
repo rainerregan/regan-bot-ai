@@ -1,10 +1,12 @@
 package com.rainerregan.reganbot;
 
 import com.linecorp.bot.client.LineMessagingClient;
+import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.ReplyMessage;
 import com.linecorp.bot.model.event.MessageEvent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
 import com.linecorp.bot.model.message.TextMessage;
+import com.linecorp.bot.model.response.BotApiResponse;
 import com.linecorp.bot.spring.boot.annotation.EventMapping;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
 import org.json.JSONObject;
@@ -54,7 +56,8 @@ public class ReganbotApplication extends SpringBootServletInitializer {
 					"2. use '-' for indonesian\n";
 
 			balasChatDenganJawaban(replyToken, reply);
-		}else if(pesanSplit[0].equals("!")) {
+		}
+		else if(pesanSplit[0].equals("!")) {
 
 			try {
 
@@ -70,7 +73,8 @@ public class ReganbotApplication extends SpringBootServletInitializer {
 			}
 
 			balasChatDenganJawaban(replyToken, replyMessage);
-		}else if(pesanSplit[0].equals("-")){
+		}
+		else if(pesanSplit[0].equals("-")){
 			try {
 				String idToEn = "id|en";
 				String enToId = "en|id";
@@ -107,6 +111,9 @@ public class ReganbotApplication extends SpringBootServletInitializer {
 			}
 			balasChatDenganJawaban(replyToken, replyMessage);
 		}
+		else if (pesan.split(";")[0].equals("remind")){
+			pushMessageKeUser(uid, "TEST");
+		}
 		/*
 		String[] pesanSplit = pesan.split(" ");
 		if(pesanSplit[0].equals("apakah")){
@@ -138,5 +145,23 @@ public class ReganbotApplication extends SpringBootServletInitializer {
 		} catch (InterruptedException | ExecutionException e) {
 			System.out.println("Ada error saat ingin membalas chat");
 		}
+	}
+
+	private void pushMessageKeUser(String uid, String message){
+		TextMessage textMessage = new TextMessage(message);
+		PushMessage pushMessage = new PushMessage(
+				uid,
+				textMessage
+		);
+
+		BotApiResponse botApiResponse;
+		try {
+			botApiResponse = lineMessagingClient.pushMessage(pushMessage).get();
+		} catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace();
+			return;
+		}
+
+		System.out.println(botApiResponse);
 	}
 }
