@@ -17,7 +17,10 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 import java.net.URLEncoder;
-import java.util.Random;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 @LineMessageHandler
@@ -40,7 +43,7 @@ public class ReganbotApplication extends SpringBootServletInitializer {
 
 	@EventMapping
 	public void handleTextEvent(MessageEvent<TextMessageContent> messageEvent){
-		String pesan = messageEvent.getMessage().getText().toLowerCase();
+		String pesan 		= messageEvent.getMessage().getText().toLowerCase();
 		String[] pesanSplit = pesan.split("");
 
 		//System.out.println(pesan);
@@ -112,7 +115,44 @@ public class ReganbotApplication extends SpringBootServletInitializer {
 			balasChatDenganJawaban(replyToken, replyMessage);
 		}
 		else if (pesan.split(";")[0].equals("remind")){
-			pushMessageKeUser(uid, "TEST");
+			String textWaktu 	= pesan.split(";")[1];
+			String catatan 		= pesan.split(";")[2];
+
+			/*
+			String[] waktuSplit = textWaktu.split("-");
+			int jam 			= Integer.parseInt(waktuSplit[0]);
+			int menit 			= Integer.parseInt(waktuSplit[1]);
+			*/
+
+			//pushMessageKeUser(uid, "TEST");
+
+			String response 	= "ERROR";
+
+			if (!textWaktu.equals("") && !catatan.equals("")) {
+
+				//the Date and time at which you want to execute
+				DateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+				Date date = null;
+				try {
+					date = dateFormatter.parse(textWaktu);
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+
+				//Now create the time and schedule it
+				Timer timer = new Timer();
+
+				response = "Okay, i'll chat you at '" + textWaktu + "'" + "\nNotes : " + catatan + ".";
+
+				String reminderResponse =  "Hey dear, dont forget your reminder : '" + catatan + "'.";
+
+				timer.schedule(new PushMessageScheduled(uid, reminderResponse), date);
+
+				balasChatDenganJawaban(replyToken,response);
+			}else{
+				response = "I'm sorry, make sure you have entered the right format : remind;hour;minute;notes.";
+				balasChatDenganJawaban(replyToken, response);
+			}
 		}
 		/*
 		String[] pesanSplit = pesan.split(" ");
@@ -147,21 +187,37 @@ public class ReganbotApplication extends SpringBootServletInitializer {
 		}
 	}
 
-	private void pushMessageKeUser(String uid, String message){
-		TextMessage textMessage = new TextMessage(message);
-		PushMessage pushMessage = new PushMessage(
-				uid,
-				textMessage
-		);
+	private class PushMessageScheduled extends TimerTask {
 
-		BotApiResponse botApiResponse;
-		try {
-			botApiResponse = lineMessagingClient.pushMessage(pushMessage).get();
-		} catch (InterruptedException | ExecutionException e) {
-			e.printStackTrace();
-			return;
+		String uid;
+		String message;
+
+		public PushMessageScheduled(String uid, String message) {
+			this.uid = uid;
+			this.message = message;
 		}
 
-		System.out.println(botApiResponse);
+		@Override
+		public void run() {
+			pushMessageKeUser(uid, message);
+		}
+
+		private void pushMessageKeUser(String uid, String message){
+			TextMessage textMessage = new TextMessage(message);
+			PushMessage pushMessage = new PushMessage(
+					uid,
+					textMessage
+			);
+
+			BotApiResponse botApiResponse;
+			try {
+				botApiResponse = lineMessagingClient.pushMessage(pushMessage).get();
+			} catch (InterruptedException | ExecutionException e) {
+				e.printStackTrace();
+				return;
+			}
+
+			System.out.println(botApiResponse);
+		}
 	}
 }
