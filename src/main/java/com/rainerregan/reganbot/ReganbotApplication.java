@@ -114,6 +114,7 @@ public class ReganbotApplication extends SpringBootServletInitializer {
 			}
 			balasChatDenganJawaban(replyToken, replyMessage);
 		}
+		/*
 		else if (pesan.split(";")[0].equals("remind")){
 			String textWaktu 	= pesan.split(";")[1];
 			String catatan 		= pesan.split(";")[2];
@@ -126,6 +127,7 @@ public class ReganbotApplication extends SpringBootServletInitializer {
 
 			//pushMessageKeUser(uid, "TEST");
 
+			/*
 			String response 	= "ERROR";
 
 			if (!textWaktu.equals("") && !catatan.equals("")) {
@@ -154,6 +156,7 @@ public class ReganbotApplication extends SpringBootServletInitializer {
 				balasChatDenganJawaban(replyToken, response);
 			}
 		}
+			 */
 		/*
 		String[] pesanSplit = pesan.split(" ");
 		if(pesanSplit[0].equals("apakah")){
@@ -187,6 +190,7 @@ public class ReganbotApplication extends SpringBootServletInitializer {
 		}
 	}
 
+	/*
 	private class PushMessageScheduled extends TimerTask {
 
 		String uid;
@@ -220,4 +224,6 @@ public class ReganbotApplication extends SpringBootServletInitializer {
 			System.out.println(botApiResponse);
 		}
 	}
+
+	 */
 }
