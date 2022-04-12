@@ -1,6 +1,7 @@
 # Regan AI Chatbot
 
 <img src="https://user-images.githubusercontent.com/34080279/162867146-420ba7f9-065c-4e4d-8dc6-68f2164d01bb.png" width="250">
+<img src="https://user-images.githubusercontent.com/34080279/162916570-dad23adf-153f-4a15-9ae6-9929eb42d318.png" width="250">
 
 Regan AI Chatbot is a chatbot designed to be run on Java with Spring Boot. Regan AI Chatbot can reply to your conversation in a group or private chat on LINE Messenger. Regan AI can understand your language with the online AI API processing from https://brainshop.ai/
 
